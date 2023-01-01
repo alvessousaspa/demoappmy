@@ -27,7 +27,7 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = '17'
 
-def flutterVersionName = '1.0.9'
+def flutterVersionName = '1.0.10'
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
