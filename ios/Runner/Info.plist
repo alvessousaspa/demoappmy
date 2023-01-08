@@ -46,6 +46,8 @@
 <string>UIInterfaceOrientationLandscapeRight</string>
 
 	</array>
+	<key>UIRequiresFullScreen</key>
+    <true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
@@ -74,5 +76,7 @@
     <array>
       <string>en</string>
     </array>
+    <key>UIRequiresFullScreen</key>
+    <true/>
 </dict>
 </plist>
