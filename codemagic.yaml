@@ -1,46 +1,64 @@
 workflows:
-  android-workflow:
-    name: SiteNative Android Workflow
+  ios-workflow:
+    name: SiteNative iOS without OneSignal
     max_build_duration: 30
     environment:
       vars:
-        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
-        FCI_KEYSTORE: /signs/test.jks
-        FCI_KEYSTORE_PASSWORD: password
-        FCI_KEY_PASSWORD: password
-        FCI_KEY_ALIAS: test
-        PACKAGE_NAME: "io.sitenative.app.prod_app"
-        APP_UID: "test_uid"
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        APP_STORE_CONNECT_ISSUER_ID: 0c686028-717a-4c70-969e-27a270b98510
+        APP_STORE_CONNECT_KEY_IDENTIFIER: 2J98X83DKP
+        APP_STORE_CONNECT_PRIVATE_KEY: |-
+         -----BEGIN PRIVATE KEY-----
+         MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgh26z/zL8eTnNksG4
+         wX7eOAvctet1d+2ZB825/9URyOqgCgYIKoZIzj0DAQehRANCAAQI0dSbKRnDUmBf
+         hshHSAWzBTZbLBQJN+NsjsJNWp3fkEF9dps9o77qNk3aLNS08JdkEacYpP5bpb/a
+         zVommdgA
+         -----END PRIVATE KEY-----
+
+        CERTIFICATE_PRIVATE_KEY: |-
+         -----BEGIN PRIVATE KEY-----
+         MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBFRiLEcFUEBdFALX
+         B56laB63DOXp0fSu9gNAx6REj4ygCgYIKoZIzj0DAQehRANCAAQ/wt84K6DyMubl
+         6aU0JqCcjG48K04lvKCK7ERHCOiOdffqBh0Rv6/QSQLJ9k8MTnqhMzKPLibkZ8pn
+         96YctSB4
+         -----END PRIVATE KEY-----
+
+        BUNDLE_ID: "app.nike.com"
       flutter: stable
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Set up key properties
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
-          echo $FCI_KEYSTORE | base64 --decode > /tmp/keystore.keystore
-          cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
-          storePassword=$FCI_KEYSTORE_PASSWORD
-          keyPassword=$FCI_KEY_PASSWORD
-          keyAlias=$FCI_KEY_ALIAS
-          storeFile=/tmp/keystore.keystore
-          EOF
-      - name: Set up local.properties
+          keychain initialize
+      - name: Fetch signing files
         script: |
-          echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create --log-api-calls --verbose
+      - name: Use system default keychain
+        script: |
+          keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
       - name: Get Flutter packages
         script: |
           cd . && flutter packages pub get
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
-      # - name: Build APK with Flutter
-      #   script: |
-      #     cd . && flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-      - name: Build AAB with Flutter
+      - name: Flutter build ipa and automatic versioning
         script: |
-          cd . && flutter build appbundle --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          flutter build ipa --release \
+          --build-name=1.0.0 \
+          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+          --export-options-plist=/Users/builder/export_options.plist
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
+    publishing:
+      scripts:
+        - name: HTTP notification
+          script: |
+            curl https://phpstack-722523-3168287.cloudwaysapps.com/backend/api/observe/notice/2b6d7780-bce6-260b-8e36-5bf9e2e9dc39
