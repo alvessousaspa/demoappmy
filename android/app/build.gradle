@@ -25,9 +25,15 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = '8'
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
 
-def flutterVersionName = '1.0.0'
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -51,7 +57,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "app.appmyweb.net"
+        applicationId "com.example.flangapp_app"
         minSdkVersion 17
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -62,9 +68,9 @@ android {
     signingConfigs {
         release {
             storeFile file("sign/key.jks")
-            storePassword "Ji2z1fLbXvmVGrDa"
-            keyAlias "nBwOuoWMUg"
-            keyPassword "Ji2z1fLbXvmVGrDa"
+            storePassword "EMrNEJbNkbPs"
+            keyAlias "tadapp_android_e"
+            keyPassword "EMrNEJbNkbPs"
         }
     }
 
