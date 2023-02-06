@@ -1,46 +1,86 @@
 workflows:
-  android-workflow:
-    name: SiteNative Android Workflow
+  ios-workflow:
+    name: SiteNative iOS without OneSignal
     max_build_duration: 30
     environment:
       vars:
-        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
-        FCI_KEYSTORE: /signs/test.jks
-        FCI_KEYSTORE_PASSWORD: password
-        FCI_KEY_PASSWORD: password
-        FCI_KEY_ALIAS: test
-        PACKAGE_NAME: "io.sitenative.app.prod_app"
-        APP_UID: "test_uid"
-      flutter: 3.3.6
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        APP_STORE_CONNECT_ISSUER_ID: 0c686028-717a-4c70-969e-27a270b98510
+        APP_STORE_CONNECT_KEY_IDENTIFIER: 2J98X83DKP
+        APP_STORE_CONNECT_PRIVATE_KEY: |-
+         -----BEGIN PRIVATE KEY-----
+         MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBFRiLEcFUEBdFALX
+         B56laB63DOXp0fSu9gNAx6REj4ygCgYIKoZIzj0DAQehRANCAAQ/wt84K6DyMubl
+         6aU0JqCcjG48K04lvKCK7ERHCOiOdffqBh0Rv6/QSQLJ9k8MTnqhMzKPLibkZ8pn
+         96YctSB4
+         -----END PRIVATE KEY-----
+
+        CERTIFICATE_PRIVATE_KEY: |-
+         -----BEGIN RSA PRIVATE KEY-----
+         MIIEowIBAAKCAQEAoElUxGb3gWs9S4ofOwMiW8JlMzahXGnlasPfeO9+61JRIGIE
+         LWKZ6DLT/uEF+D7cZ2gwbOq887N0+hvIoVAYvOp0nlZIj0HCYzg4fggejqq5DyuF
+         suSOJw/3UERd88lFbdOPlskqPP26G4G7Za4iXMdfUVq+pXNTxeMrSPrhaRAGy0E2
+         y9LDNA5fVNTSg3DLocGFdqyuleuFTwPv1DARijTLPOp4A+Io4hXPHD3e8esuNdGY
+         ngWA3L7Jsa8PuXtLxS4AYKCt9TqQHFTTgsBELNCAo8nXv2iatV9M7wjspr+QoLHL
+         s/ihXSmwLnTldG2qiYZJOFAaNORWqLgFXGqCjQIDAQABAoIBAA8+ijJXvKhxY5YA
+         n/HD3YuulGNnibc5VxltYZ6l4INPA+o5iD4sx4h+9QyjqCaxC9NF5H0nYisnYTO8
+         WruE26V0Av1gJWyCi5NWMIFEEmvtLsaTlBasiByM9y+KIQljlhfY7CoiHcNJOl8N
+         Wp5UDm6Wg6lAISupKUmDzoUVX0TXm9VwyUkNAj2dcwjXNd56f5DgAN8EBSkCmkry
+         vgs5oW0DZ/GURh8/UAAa1vN3Txicv10YllZuE+XM18DWK6nZJfVWD3JYJdeKAeNz
+         evwJb/qYPT74gE0lXGibauZTOJ4kC1MOTxEmig0HVMfVnoTKeqCLXbIUQWTp1r5C
+         l89zTJ0CgYEAzC7XfvnBWuTonlt2NEeKFxGBnfSSg65ADRWITfOxC0RY61xqok93
+         BIVZuS0sXistoB8KCPox53UOGM9e3fPF3zRsd36p096Mfj4fwkG3G+7X7S9tYR0w
+         zZlezhZil4eBQI7bpdsgufFl64F185Ew8lBHlv7THXpR50ieSDkQqZsCgYEAyPap
+         wpaLAkLru96KKoG1QM7cUNs7eDNf7SISFA7BnbgLj4AN1PwxrCtU/k4Y/v4xlWf6
+         9w7NIzSmElxCIJqCTDjcnCDxoM5w5X3hBEuS6TybTwU7RCvH8K3FyH+Z7mMGjzFa
+         hFWNo1eALAvlbMHjFX8bsXeMssBvicfK9ds5evcCgYEAsnLZ2dpz93mKKCRtWWGQ
+         uXqOWrtOdZGL3yOLff1WJS+1uvWJKJPkw+m7sdBeL2rzNDcMcS4hAVXXXS2Xjsmn
+         jNznU0Q7LrUY+phW71K5ssr6ogvKP47ggT/ikKEVx7Mg7ogsRXcO0hO87Ke3q4ig
+         S5aICtppLiEihc18sEhXXLMCgYA8m4+FHQvdabtYlHwM58N3QSvWwteDn9LdXHoh
+         THX+EASEibUiN9DvQL5IV9tYA+eGTK62leMuK/Gt9d8HoDGNtVRrTdAxlDEeNUGI
+         nxY2e03HnidKnv2Uy4OrvTf6WikfRF4tLPQjf/8qyYeuribDU+tRMWHggwLghb3j
+         OfNy7wKBgAT2mSPtlWsRdyNGBRj9OmQTXsvyBDRmE0Wa7TRlVCCULLCl51He0Xwf
+         4fRvgQFd7Bi97CujxvaYhzFPEZXCzV4r2PoW01q81yq5C9XbpU4if6cIvbIR6wt6
+         0i0tCgPBoSlR+JQ41N1S8bvllZRf4W/9qh4H7zLJ+u5P55GFIVJj
+         -----END RSA PRIVATE KEY-----
+         
+
+        BUNDLE_ID: "app.appointech.app"
+      flutter: stable
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Set up key properties
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
-          echo $FCI_KEYSTORE | base64 --decode > /tmp/keystore.keystore
-          cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
-          storePassword=$FCI_KEYSTORE_PASSWORD
-          keyPassword=$FCI_KEY_PASSWORD
-          keyAlias=$FCI_KEY_ALIAS
-          storeFile=/tmp/keystore.keystore
-          EOF
-      - name: Set up local.properties
+          keychain initialize
+      - name: Fetch signing files
         script: |
-          echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create --log-api-calls --verbose
+      - name: Use system default keychain
+        script: |
+          keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
       - name: Get Flutter packages
         script: |
           cd . && flutter packages pub get
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
-      # - name: Build APK with Flutter
-      #   script: |
-      #     cd . && flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-      - name: Build AAB with Flutter
+      - name: Flutter build ipa and automatic versioning
         script: |
-          cd . && flutter build appbundle --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          flutter build ipa --release \
+          --build-name=1.0.0 \
+          --build-number={APP_VERSION} \
+          --export-options-plist=/Users/builder/export_options.plist
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
+    publishing:
+      scripts:
+        - name: HTTP notification
+          script: |
+            curl https://my.appmyweb.net/backend/api/observe/notice/0f20e049-7263-5785-e1e9-b6247e3983fa
