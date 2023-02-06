@@ -11,7 +11,7 @@ workflows:
         FCI_KEY_ALIAS: test
         PACKAGE_NAME: "io.sitenative.app.prod_app"
         APP_UID: "test_uid"
-      flutter: stable
+      flutter: 3.3.6
       xcode: latest
       cocoapods: default
     scripts:
