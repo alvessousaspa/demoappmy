@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.VIDEO_CAPTURE" />
     <uses-permission android:name="android.permission.AUDIO_CAPTURE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     
     
     
@@ -27,32 +26,6 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/provider_paths" />
         </provider>
-
-        <provider
-                android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
-                android:authorities="${applicationId}.flutter_downloader.provider"
-                android:exported="false"
-                android:grantUriPermissions="true">
-            <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/provider_paths"/>
-        </provider>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-feature android:name="android.hardware.location.gps" />
-   <application
-        android:label="flangapp_app"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-       <provider
-               android:name="androidx.core.content.FileProvider"
-               android:authorities="${applicationId}.flutter_inappwebview.fileprovider"
-               android:exported="false"
-               android:grantUriPermissions="true">
-           <meta-data
-                   android:name="android.support.FILE_PROVIDER_PATHS"
-                   android:resource="@xml/provider_paths" />
-       </provider>
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
