@@ -17,6 +17,7 @@ import 'package:flangapp_app/widgets/loader.dart';
 import 'package:flangapp_app/widgets/modal_fit.dart';
 import 'package:flangapp_app/widgets/offline_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
@@ -92,11 +93,13 @@ class _WebViewState extends State<WebView> {
         debugPrint("Change network connection status");
         changeConnectionStatus(result);
       });
+    _bindBackgroundIsolate();
     _getAccess();
   }
 
   @override
   void dispose() {
+    _unbindBackgroundIsolate();
     super.dispose();
   }
 
@@ -109,6 +112,39 @@ class _WebViewState extends State<WebView> {
         await Permission.microphone.request();
       }
     }
+  }
+
+  void _bindBackgroundIsolate() {
+    bool isSuccess = IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    if (!isSuccess) {
+      _unbindBackgroundIsolate();
+      _bindBackgroundIsolate();
+      return;
+    }
+    _port.listen((dynamic data) {
+      String? id = data[0];
+      DownloadTaskStatus? status = data[1];
+      int progress = data[2];
+      if (progress == 100) {
+        setState(() {
+          download.progress = 0;
+          download.status = false;
+        });
+        return;
+      }
+      setState(() {
+        download.progress = progress;
+        download.status = true;
+      });
+      debugPrint("id - $id");
+      debugPrint("status - ${status.toString()}");
+      debugPrint("progress - $progress");
+    });
+  }
+
+  void _unbindBackgroundIsolate() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
   }
 
   void initWebViewCollections() {
@@ -434,6 +470,25 @@ class _WebViewState extends State<WebView> {
             return PermissionRequestResponse(
                 resources: resources,
                 action: PermissionRequestResponseAction.GRANT);
+          },
+          onDownloadStart: (controller, url) async {
+            checkStoragePermission().then((hasGranted) async {
+              if (hasGranted == true) {
+                String _localPath;
+                if (Platform.isIOS) {
+                  _localPath = await getApplicationDocumentsDirectory() as String;
+                } else {
+                  _localPath = '/storage/emulated/0/Download';
+                }
+                await FlutterDownloader.enqueue(
+                  url: url.toString(),
+                  savedDir: _localPath,
+                  showNotification: true,
+                  openFileFromNotification: true,
+                  requiresStorageNotLow: true,
+                );
+              }
+            });
           },
           onLoadError: (controller, url, code, message) {
             webViewsCollections[index].pullToRefreshController?.endRefreshing();
